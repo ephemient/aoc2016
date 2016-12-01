@@ -9,10 +9,15 @@
 module Main (main) where
 ~~~
 
+## [Day 1: No Time for a Taxicab](/src/Day1.hs)
+~~~ {.haskell}
+import qualified Day1
+~~~
+
 ---
 
 ~~~ {.haskell}
 main :: IO ()
 main = do
-    return ()
+    putStrLn "Day 1:"; Day1.main
 ~~~
