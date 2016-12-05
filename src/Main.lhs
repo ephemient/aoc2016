@@ -29,6 +29,11 @@ import qualified Day3
 import qualified Day4
 ~~~
 
+## [Day 5: How About a Nice Game of Chess?](/src/Day5.hs)
+~~~ {.haskell}
+import qualified Day5
+~~~
+
 ---
 
 ~~~ {.haskell}
@@ -38,4 +43,5 @@ main = do
     putStrLn "Day 2:"; Day2.main
     putStrLn "Day 3:"; Day3.main
     putStrLn "Day 4:"; Day4.main
+    putStrLn "Day 5:"; Day5.main
 ~~~
