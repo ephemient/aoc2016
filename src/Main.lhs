@@ -34,6 +34,11 @@ import qualified Day4
 import qualified Day5
 ~~~
 
+## [Day 6: Signals and Noise](/src/Day6.hs)
+~~~ {.haskell}
+import qualified Day6
+~~~
+
 ---
 
 ~~~ {.haskell}
@@ -44,4 +49,5 @@ main = do
     putStrLn "Day 3:"; Day3.main
     putStrLn "Day 4:"; Day4.main
     putStrLn "Day 5:"; Day5.main
+    putStrLn "Day 6:"; Day6.main
 ~~~
