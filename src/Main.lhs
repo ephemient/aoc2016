@@ -39,6 +39,11 @@ import qualified Day5
 import qualified Day6
 ~~~
 
+## [Day 7: Internet Protocol Version 7](/src/Day7.hs)
+~~~ {.haskell}
+import qualified Day7
+~~~
+
 ---
 
 ~~~ {.haskell}
@@ -50,4 +55,5 @@ main = do
     putStrLn "Day 4:"; Day4.main
     putStrLn "Day 5:"; Day5.main
     putStrLn "Day 6:"; Day6.main
+    putStrLn "Day 7:"; Day7.main
 ~~~
