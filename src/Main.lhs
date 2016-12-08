@@ -44,6 +44,11 @@ import qualified Day6
 import qualified Day7
 ~~~
 
+## [Day 8: Two-Factor Authentication](/src/Day8.hs)
+~~~ {.haskell}
+import qualified Day8
+~~~
+
 ---
 
 ~~~ {.haskell}
@@ -56,4 +61,5 @@ main = do
     putStrLn "Day 5:"; Day5.main
     putStrLn "Day 6:"; Day6.main
     putStrLn "Day 7:"; Day7.main
+    putStrLn "Day 8:"; Day8.main
 ~~~
