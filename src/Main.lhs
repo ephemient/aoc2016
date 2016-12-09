@@ -49,6 +49,11 @@ import qualified Day7
 import qualified Day8
 ~~~
 
+## [Day 9: Explosives in Cyberspace](/src/Day9.hs)
+~~~ {.haskell}
+import qualified Day9
+~~~
+
 ---
 
 ~~~ {.haskell}
@@ -62,4 +67,5 @@ main = do
     putStrLn "Day 6:"; Day6.main
     putStrLn "Day 7:"; Day7.main
     putStrLn "Day 8:"; Day8.main
+    putStrLn "Day 9:"; Day9.main
 ~~~
