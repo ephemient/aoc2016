@@ -54,6 +54,11 @@ import qualified Day8
 import qualified Day9
 ~~~
 
+## [Day 10: Balance Bots](/src/Day10.hs)
+~~~ {.haskell}
+import qualified Day10
+~~~
+
 ---
 
 ~~~ {.haskell}
@@ -68,4 +73,5 @@ main = do
     putStrLn "Day 7:"; Day7.main
     putStrLn "Day 8:"; Day8.main
     putStrLn "Day 9:"; Day9.main
+    putStrLn "Day 10:"; Day10.main
 ~~~
