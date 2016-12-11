@@ -59,6 +59,11 @@ import qualified Day9
 import qualified Day10
 ~~~
 
+## [Day 11: Radioisotope Thermoelectric Generators](/src/Day11.hs)
+~~~ {.haskell}
+import qualified Day11
+~~~
+
 ---
 
 ~~~ {.haskell}
@@ -74,4 +79,5 @@ main = do
     putStrLn "Day 8:"; Day8.main
     putStrLn "Day 9:"; Day9.main
     putStrLn "Day 10:"; Day10.main
+    putStrLn "Day 11:"; Day11.main
 ~~~
