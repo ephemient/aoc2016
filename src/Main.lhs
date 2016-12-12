@@ -64,6 +64,11 @@ import qualified Day10
 import qualified Day11
 ~~~
 
+## [Day 12: Leonardo's Monorail](/src/Day12.hs)
+~~~ {.haskell}
+import qualified Day12
+~~~
+
 ---
 
 ~~~ {.haskell}
@@ -80,4 +85,5 @@ main = do
     putStrLn "Day 9:"; Day9.main
     putStrLn "Day 10:"; Day10.main
     putStrLn "Day 11:"; Day11.main
+    putStrLn "Day 12:"; Day12.main
 ~~~
