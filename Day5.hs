@@ -3,6 +3,7 @@ module Day5 (main) where
 
 import Control.Applicative ((<|>))
 import Control.Arrow ((&&&))
+import Control.Parallel.Strategies (using, parBuffer, rdeepseq)
 import qualified Crypto.Hash.MD5 as MD5
 import Data.Array.IArray (Array, IArray, Ix, accum, bounds, elems, inRange, listArray)
 import Data.Bits ((.&.), shiftR, testBit)
@@ -19,9 +20,11 @@ input :: MD5.Ctx
 input = MD5.update MD5.init $ fromString $ dropWhileEnd isSpace $ unsafePerformIO $ readFile "day5.txt"
 
 hashes :: [B.ByteString]
-hashes = filter hasLeadingZeros $ map hash [0..]
-  where hasLeadingZeros = all (== 0) . B.zipWith (.&.) (B.pack [255, 255, 240])
-        hash = MD5.finalize . MD5.update input . fromString . show
+hashes = concat filteredChunks where
+    filteredChunks = map filteredChunkFrom [0, 4096..] `using` parBuffer 64 rdeepseq
+    filteredChunkFrom from = filter hasLeadingZeros $ map hash [from .. from + 4095]
+    hasLeadingZeros = all (== 0) . B.zipWith (.&.) (B.pack [255, 255, 240])
+    hash = MD5.finalize . MD5.update input . fromString . show
 
 nibble :: Int -> B.ByteString -> Word8
 nibble n = (if testBit n 0 then (.&. 0xf) else (`shiftR` 4)) . (`B.index` shiftR n 1)
