@@ -9,9 +9,9 @@ import Data.ByteString.Builder (toLazyByteString)
 import Data.ByteString.Builder.Extra (intHost)
 import Data.ByteString.Lazy (toStrict)
 import Data.ByteString.Short (ShortByteString, toShort)
-import Data.Char (isAlphaNum)
+import Data.Char (isAlphaNum, toUpper)
 import Data.Function (on)
-import Data.List (elemIndex, nub, nubBy, sortBy, tails)
+import Data.List (elemIndex, inits, nub, nubBy, sortBy, tails, transpose)
 import Data.Maybe (catMaybes, maybeToList)
 import Data.Ord (comparing)
 import Data.Set (Set, insert, member, singleton, size)
@@ -45,14 +45,30 @@ parse = do
         return (element, danger)
 
 initialState :: (IArray array Bool) => [[(String, Danger)]] -> State array Int
-initialState input = State minBound $ listArray bounds (repeat False) // placements
+initialState input' = State minBound $ listArray bounds (repeat False) // placements
   where
-    elements = nub $ input >>= map fst
+    elements = nub (input >>= map fst) ++ ["elerium", "dilithium"]
     bounds = ((minBound, 0, minBound), (maxBound, length elements - 1, maxBound))
     placements = do
-        (floor, items) <- zip [minBound ..] input
+        (floor, items) <- zip [minBound ..] input'
         ((`elemIndex` elements) -> Just element, danger) <- items
         return ((floor, element, danger), True)
+
+showState :: (IArray array Bool) => State array Int -> String
+showState (State elevator things) = unlines $ do
+    floor <- reverse $ range (minFloor, maxFloor)
+    let showFloor = show $ fromEnum floor + 1
+        showElevator = if elevator == floor then "E" else " "
+        showElement = (!!) elementNames
+        showDanger Microchip = 'M'
+        showDanger Generator = 'G'
+        showItem (element, danger) | things ! (floor, element, danger) = showDanger danger : showElement element
+        showItem _ = replicate (elementNameLength + 1) ' '
+    return $ unwords $ showFloor : showElevator : map showItem (range ((minElement, minDanger), (maxElement, maxDanger)))
+  where
+    elements = map (map toUpper) $ nub (input >>= map fst) ++ ["elerium", "dilithium"]
+    (elementNameLength, elementNames) : _ = dropWhile ((< length elements) . length . nub . snd) $ zip [0..] $ map transpose $ inits $ transpose $ map (++ repeat ' ') elements
+    ((minFloor, minElement, minDanger), (maxFloor, maxElement, maxDanger)) = bounds things
 
 save :: (IArray array Bool, Ix element) => State array element -> ShortByteString
 save (State elevator things) = toShort $ toStrict $ toLazyByteString $
@@ -71,9 +87,9 @@ save (State elevator things) = toShort $ toStrict $ toLazyByteString $
         foldr (.|.) 0 [if b then i else 0 | b <- h | i <- iterate (* 2) 1] : toInts t
 
 moves :: (Enum depth, IArray array Bool, Ix element) =>
-    (State array element, depth) -> Set ShortByteString ->
-    ([(State array element, depth)], Set ShortByteString)
-moves (State elevator things, !k) visited = (zip states $ repeat $ succ k, visited') where
+    ([State array element], State array element, depth) -> Set ShortByteString ->
+    ([([State array element], State array element, depth)], Set ShortByteString)
+moves (path, s@(State elevator things), !k) visited = (map (s:path,, succ k) states, visited') where
     ((minFloor, minElement, Microchip), (maxFloor, maxElement, Generator)) = bounds things
     toFloor floor (element, danger) = (floor, element, danger)
     safe things floor = let elements = range (minElement, maxElement) in
@@ -115,14 +131,16 @@ unfold f k as = as' ++ unfold f k' as' where
 
 main :: IO ()
 main = do
-    let expand state0 = unfold moves (singleton $ save state0) [(state0, 0)]
-        states1 = expand $ initialState input :: [(State UArray Int, Int)]
+    let expand state0 = unfold moves (singleton $ save state0) [([], state0, 0)]
+        states1 = expand $ initialState input :: [([State UArray Int], State UArray Int, Int)]
         states2 = expand $ initialState $
             (head input ++ liftM2 (,) ["elerium", "dilithium"] [Microchip, Generator]) :
-            tail input :: [(State UArray Int, Int)]
-        done (State _ things, _) = not $ or
+            tail input :: [([State UArray Int], State UArray Int, Int)]
+        done (_, State _ things, _) = not $ or
           [ things ! (floor, element, danger)
           | (floor, element, danger) <- range $ bounds things
           , floor /= maxBound ]
-    print $ snd $ head $ filter done states1
-    print $ snd $ head $ filter done states2
+        (path1, state1, distance1) : _ = filter done states1
+        (path2, state2, distance2) : _ = filter done states2
+    print distance1; putStrLn ""; mapM_ (putStrLn . showState) $ reverse $ state1 : path1
+    print distance2; putStrLn ""; mapM_ (putStrLn . showState) $ reverse $ state2 : path2

@@ -1,0 +1,27 @@
+#!/usr/bin/perl
+# runhaskell Day11.hs | perl animate-day11
+use Term::Cap;
+use Time::HiRes 'sleep';
+
+my (@part1, @part2);
+{
+    local $/ = "\n\n";
+    chomp(my $part1 = <>);
+    push @part1, scalar <> for 0 .. $part1;
+    chomp(my $part2 = <>);
+    push @part2, scalar <> for 0 .. $part2;
+}
+chomp(@part1, @part2);
+
+my $terminal = Term::Cap->Tgetent();
+$terminal->Trequire('cl', 'cm');
+print $terminal->Tputs('cl', 0);
+my ($i, $j) = (0, 0);
+while ($i < $#part1 || $j < $#part2) {
+    print $terminal->Tgoto('cm', 0, 0) . "$i\n$part1[$i]\n$j\n$part2[$j]";
+} continue {
+    $i++ if $i < $#part1;
+    $j++ if $j < $#part2;
+    sleep 0.5;
+}
+print $terminal->Tgoto('cm', 0, 0) . "$i\n$part1[$i]\n$j\n$part2[$j]";
