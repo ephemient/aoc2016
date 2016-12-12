@@ -23,6 +23,7 @@ executable aoc2016
     array >=0.5 && <0.6,
     bytestring >=0.10 && <0.11,
     cryptohash >=0.11 && <0.12,
+    parallel >=3.2 && <3.3,
     markdown-unlit
   ghc-options:         -pgmL markdown-unlit -threaded -with-rtsopts -N
   hs-source-dirs:      src
