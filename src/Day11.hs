@@ -6,7 +6,7 @@ Description : <http://adventofcode.com/2016/day/11 Day 11: Radioisotope Thermoel
 {-# OPTIONS_HADDOCK ignore-exports #-}
 module Day11 (main) where
 
-import Common (readDataFile)
+import Common (readDataFile, unfold)
 import Control.Applicative ((<$))
 import Control.Monad (guard, liftM2)
 import Data.Array.Unboxed (UArray, IArray, Ix, (!), (//), assocs, bounds, listArray, range)
@@ -111,13 +111,6 @@ moves (State elevator things, !k) visited = (zip states $ repeat $ succ k, visit
     add state@(save -> save') (_, visited)
       | member save' visited = (Nothing, visited)
       | otherwise = (Just state, insert save' visited)
-
-unfold :: (a -> b -> ([a], b)) -> b -> [a] -> [a]
-unfold _ _ [] = []
-unfold f k as = as' ++ unfold f k' as' where
-    unfold' k [] = ([], k)
-    unfold' k (a:as) = let (as', k') = f a k; ~(as'', k'') = unfold' k' as in (as' ++ as'', k'')
-    (as', k') = unfold' k as
 
 main :: IO ()
 main = do

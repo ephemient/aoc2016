@@ -6,7 +6,7 @@ Description : <http://adventofcode.com/2016/day/13 Day 13: A Maze of Twisty Litt
 {-# OPTIONS_HADDOCK ignore-exports #-}
 module Day13 (main) where
 
-import Common (readDataFile)
+import Common (readDataFile, unfold)
 import Data.Bits (Bits, popCount, testBit)
 import Data.Set (Set, insert, member, singleton)
 import System.IO.Unsafe (unsafePerformIO)
@@ -23,15 +23,8 @@ walk input ((x, y), n) visited = (map (, succ n) next, foldr insert visited next
     next = filter ok [(x + 1, y), (x, y - 1), (x - 1, y), (x, y + 1)]
     ok (x, y) = x >= 0 && y >= 0 && not (wall input (x, y) || member (x, y) visited)
 
-unfold :: (a -> b -> ([a], b)) -> b -> [a] -> [a]
-unfold _ _ [] = []
-unfold f k as = as' ++ unfold f k' as' where
-    unfold' k [] = ([], k)
-    unfold' k (a:as) = let (as', k') = f a k; ~(as'', k'') = unfold' k' as in (as' ++ as'', k'')
-    (as', k') = unfold' k as
-
 main :: IO ()
 main = do
     let reach = unfold (walk input) (singleton (1, 1)) [((1, 1), 0)] :: [((Int, Int), Int)]
     print $ snd $ head $ filter ((==) (31, 39) . fst) reach
-    print $ succ $ length $ takeWhile ((<= 50) . snd) reach
+    print $ length $ takeWhile ((<= 50) . snd) reach
