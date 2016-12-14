@@ -74,6 +74,11 @@ import qualified Day12
 import qualified Day13
 ~~~
 
+## [Day 14: One-Time Pad](/src/Day14.hs)
+~~~ {.haskell}
+import qualified Day14
+~~~
+
 ---
 
 ~~~ {.haskell}
@@ -92,4 +97,5 @@ main = do
     putStrLn "Day 11:"; Day11.main
     putStrLn "Day 12:"; Day12.main
     putStrLn "Day 13:"; Day13.main
+    putStrLn "Day 14:"; Day14.main
 ~~~
