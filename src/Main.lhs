@@ -84,6 +84,11 @@ import qualified Day14
 import qualified Day15
 ~~~
 
+## [Day 16: Dragon Checksum](/src/Day16.hs)
+~~~ {.haskell}
+import qualified Day16
+~~~
+
 ---
 
 ~~~ {.haskell}
@@ -104,4 +109,5 @@ main = do
     putStrLn "Day 13:"; Day13.main
     putStrLn "Day 14:"; Day14.main
     putStrLn "Day 15:"; Day15.main
+    putStrLn "Day 16:"; Day16.main
 ~~~
