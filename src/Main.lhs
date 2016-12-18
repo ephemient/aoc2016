@@ -94,6 +94,11 @@ import qualified Day16
 import qualified Day17
 ~~~
 
+## [Day 18: Like a Rogue](/src/Day18.hs)
+~~~ {.haskell}
+import qualified Day18
+~~~
+
 ---
 
 ~~~ {.haskell}
@@ -116,4 +121,5 @@ main = do
     putStrLn "Day 15:"; Day15.main
     putStrLn "Day 16:"; Day16.main
     putStrLn "Day 17:"; Day17.main
+    putStrLn "Day 18:"; Day18.main
 ~~~
