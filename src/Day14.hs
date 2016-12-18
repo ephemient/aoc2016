@@ -2,45 +2,69 @@
 Module      : Day14
 Description : <http://adventofcode.com/2016/day/14 Day 14: One-Time Pad>
 -}
+{-# LANGUAGE ViewPatterns #-}
 {-# OPTIONS_HADDOCK ignore-exports #-}
 module Day14 (main) where
 
 import Common (readDataFile)
-import Control.Monad (guard)
-import Control.Parallel.Strategies (parBuffer, rdeepseq, rpar, using)
-import Crypto.Hash.MD5 (Ctx, finalize, hash, init, update)
+import Control.Monad (forM_, guard, replicateM_ )
 import Data.Bits ((.&.), shiftR)
-import Data.ByteString (ByteString, unpack, concatMap)
-import Data.Char (intToDigit, isSpace)
-import Data.List (dropWhileEnd, isInfixOf, tails)
+import Data.ByteString (ByteString, append, isInfixOf, replicate, uncons)
+import Data.ByteString.Unsafe (unsafePackMallocCStringLen, unsafeUseAsCStringLen)
+import Data.Char (isSpace, ord)
+import Data.List (dropWhileEnd, tails)
 import Data.Maybe (maybeToList)
 import Data.String (fromString)
-import Prelude hiding (concatMap, init)
+import Foreign (Ptr, allocaBytes, copyArray, mallocBytes, peekElemOff, pokeElemOff)
+import Foreign.C (CChar, CLong(CLong), CInt(CInt), CStringLen)
+import Prelude hiding (replicate)
 import System.IO.Unsafe (unsafePerformIO)
 
-input :: Ctx
-input = update init $ fromString $ dropWhileEnd isSpace $ unsafePerformIO $ readDataFile "day14.txt"
+foreign import ccall "MD5" openssl_MD5 :: Ptr CChar -> CLong -> Ptr CChar -> IO CInt
 
-asHex :: ByteString -> ByteString
-asHex = concatMap $ \w -> fromString $ map (intToDigit . fromIntegral) [w `shiftR` 4, w .&. 0xf]
+readInput :: FilePath -> IO ByteString
+readInput = fmap (fromString . dropWhileEnd isSpace) . readDataFile
 
-hashes, hashes' :: [ByteString]
-hashes = concat (map hashChunk [0, 4096..] `using` parBuffer 16 rdeepseq) where
-    hashChunk from = map (asHex . finalize . update input . fromString . show) [from .. from + 4095]
-hashes' = map ((!! 2016) . iterate (asHex . hash)) hashes `using` parBuffer 16 rpar
+hexify :: CStringLen -> CStringLen -> IO ()
+hexify (dest, n) (source, m) | n >= 2 * m = forM_ [0 .. m - 1] $ \i -> do
+    w <- peekElemOff source i
+    pokeElemOff dest (2 * i) $ integralToDigit $ w `shiftR` 4 .&. 15
+    pokeElemOff dest (2 * i + 1) $ integralToDigit $ w .&. 15
+  where integralToDigit c = fromIntegral (if c < 10 then ord '0' else ord 'a' - 10) + c
+
+hashOnce :: ByteString -> IO ByteString
+hashOnce bs = unsafeUseAsCStringLen bs $ \(d, fromIntegral -> n) -> allocaBytes 16 $ \md -> do
+    openssl_MD5 d n md
+    o <- mallocBytes 32
+    hexify (o, 32) (md, 16)
+    unsafePackMallocCStringLen (o, 32)
+
+hashRepeatedly :: Int -> ByteString -> IO ByteString
+hashRepeatedly n bs = unsafeUseAsCStringLen bs $ \(d, 32) -> do
+    o <- mallocBytes 32
+    copyArray o d 32
+    allocaBytes 16 $ \md -> replicateM_ n $ openssl_MD5 o 32 md >> hexify (o, 32) (md, 16)
+    unsafePackMallocCStringLen (o, 32)
+
+hashes :: ByteString -> [ByteString]
+hashes input = map (unsafePerformIO . hashOnce . append input . fromString . show) [0..]
+
+rehash :: [ByteString] -> [ByteString]
+rehash = map $ unsafePerformIO . hashRepeatedly 2016
 
 keys :: [ByteString] -> [Int]
 keys hashes = do
     (i, first : rest) <- zip [0..] $ tails hashes
-    let findTriple (a:b:c:_) | a == b && b == c = Just a
-        findTriple (_:s) = findTriple s
+    let findTriple (uncons -> Just (a, s@(uncons -> Just (b, uncons -> Just (c, _)))))
+          | a == b && b == c = Just a
+          | otherwise = findTriple s
         findTriple _ = Nothing
-    t <- maybeToList $ findTriple $ unpack first
-    let hasQuintuple s = replicate 5 t `isInfixOf` unpack s
-    guard $ any hasQuintuple $ take 1000 rest
+    guard $ maybe False (\t -> any (isInfixOf $ replicate 5 t) $ take 1000 rest) $ findTriple first
     return i
 
 main :: IO ()
 main = do
-    print $ keys hashes !! 63
-    print $ keys hashes' !! 63
+    input <- readInput "day14.txt"
+    let hashInput = hashes input
+    print $ keys hashInput !! 63
+    print $ keys (rehash hashInput) !! 63
