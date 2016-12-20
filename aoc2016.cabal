@@ -19,7 +19,7 @@ executable aoc2016
   other-extensions:    BangPatterns, FlexibleContexts, FlexibleInstances, GADTs, NegativeLiterals, ParallelListComp, RecordWildCards, TupleSections, ViewPatterns
   build-depends:
     base >=4.9 && <4.10,
-    containers >=0.5.8.1 && <0.6,
+    containers >=0.5 && <0.6,
     array >=0.5 && <0.6,
     bytestring >=0.10 && <0.11,
     markdown-unlit
