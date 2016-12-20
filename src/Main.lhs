@@ -104,6 +104,11 @@ import qualified Day18
 import qualified Day19
 ~~~
 
+## [Day 20: Firewall Rules](/src/Day20.hs)
+~~~ {.haskell}
+import qualified Day20
+~~~
+
 ---
 
 ~~~ {.haskell}
@@ -128,4 +133,5 @@ main = do
     putStrLn "Day 17:"; Day17.main
     putStrLn "Day 18:"; Day18.main
     putStrLn "Day 19:"; Day19.main
+    putStrLn "Day 20:"; Day20.main
 ~~~
