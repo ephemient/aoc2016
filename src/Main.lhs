@@ -109,6 +109,11 @@ import qualified Day19
 import qualified Day20
 ~~~
 
+## [Day 21: Scrambled Letters and Hash](/src/Day21.hs)
+~~~ {.haskell}
+import qualified Day21
+~~~
+
 ---
 
 ~~~ {.haskell}
@@ -134,4 +139,5 @@ main = do
     putStrLn "Day 18:"; Day18.main
     putStrLn "Day 19:"; Day19.main
     putStrLn "Day 20:"; Day20.main
+    putStrLn "Day 21:"; Day21.main
 ~~~
