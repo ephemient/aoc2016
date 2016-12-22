@@ -114,6 +114,11 @@ import qualified Day20
 import qualified Day21
 ~~~
 
+## [Day 22: Grid Computing](/src/Day22.hs)
+~~~ {.haskell}
+import qualified Day22
+~~~
+
 ---
 
 ~~~ {.haskell}
@@ -140,4 +145,5 @@ main = do
     putStrLn "Day 19:"; Day19.main
     putStrLn "Day 20:"; Day20.main
     putStrLn "Day 21:"; Day21.main
+    putStrLn "Day 22:"; Day22.main
 ~~~
