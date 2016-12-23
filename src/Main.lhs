@@ -119,6 +119,11 @@ import qualified Day21
 import qualified Day22
 ~~~
 
+## [Day 23: Safe-Cracking](/src/Day23.hs)
+~~~ {.haskell}
+import qualified Day23
+~~~
+
 ---
 
 ~~~ {.haskell}
@@ -146,4 +151,5 @@ main = do
     putStrLn "Day 20:"; Day20.main
     putStrLn "Day 21:"; Day21.main
     putStrLn "Day 22:"; Day22.main
+    putStrLn "Day 23:"; Day23.main
 ~~~
