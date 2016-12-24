@@ -124,6 +124,11 @@ import qualified Day22
 import qualified Day23
 ~~~
 
+## [Day 24: Air Duct Spelunking](/src/Day24.hs)
+~~~ {.haskell}
+import qualified Day24
+~~~
+
 ---
 
 ~~~ {.haskell}
@@ -152,4 +157,5 @@ main = do
     putStrLn "Day 21:"; Day21.main
     putStrLn "Day 22:"; Day22.main
     putStrLn "Day 23:"; Day23.main
+    putStrLn "Day 24:"; Day24.main
 ~~~
