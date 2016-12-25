@@ -129,6 +129,11 @@ import qualified Day23
 import qualified Day24
 ~~~
 
+## [Day 25: Clock Signal](/src/Day25.hs)
+~~~ {.haskell}
+import qualified Day25
+~~~
+
 ---
 
 ~~~ {.haskell}
@@ -158,4 +163,5 @@ main = do
     putStrLn "Day 22:"; Day22.main
     putStrLn "Day 23:"; Day23.main
     putStrLn "Day 24:"; Day24.main
+    putStrLn "Day 25:"; Day25.main
 ~~~
