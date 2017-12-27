@@ -1,1 +1,1 @@
-src/Main.lhs
+app/Main.lhs

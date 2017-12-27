@@ -18,12 +18,12 @@ data-files:
   day22.txt, day23.txt, day24.txt, day25.txt
 cabal-version:       >=1.10
 
-executable aoc2016
-  main-is:             Main.lhs
-  other-modules:
+library
+  exposed-modules:
     Day1, Day2, Day3, Day4, Day5, Day6, Day7, Day8, Day9, Day10, Day11, Day12,
     Day13, Day14, Day15, Day16, Day17, Day18, Day19, Day20, Day21, Day22, Day23,
     Day24, Day25
+  other-modules:       Common, Paths_aoc2016
   other-extensions:    BangPatterns, FlexibleContexts, FlexibleInstances, GADTs, NegativeLiterals, ParallelListComp, RecordWildCards, TupleSections, ViewPatterns
   build-depends:
     base >=4.9 && <4.10,
@@ -32,6 +32,23 @@ executable aoc2016
     bytestring >=0.10 && <0.11,
     markdown-unlit
   extra-libraries:     crypto
-  ghc-options:         -pgmL markdown-unlit -threaded -with-rtsopts -N
   hs-source-dirs:      src
+  default-language:    Haskell2010
+
+executable aoc2016-exe
+  main-is:             Main.lhs
+  build-depends:       base
+                     , aoc2016
+  ghc-options:         -pgmL markdown-unlit -threaded -with-rtsopts -N
+  hs-source-dirs:      app
+  default-language:    Haskell2010
+
+benchmark aoc2016-bench
+  type:                exitcode-stdio-1.0
+  hs-source-dirs:      bench
+  main-is:             Main.hs
+  build-depends:       base
+                     , aoc2016
+                     , criterion
+  ghc-options:         -threaded -rtsopts -with-rtsopts=-N
   default-language:    Haskell2010
